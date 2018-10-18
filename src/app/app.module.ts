@@ -9,17 +9,24 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 
+import { PusherProvider } from '../providers/pusher/pusher';
+
 import { ChatComponent } from '../components/chat/chat';
+import { EmojiPanelComponent } from '../components/emoji-panel/emoji-panel';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    ChatComponent
+    ChatComponent,
+    EmojiPanelComponent
   ],
   imports: [
   BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      scrollAssist: false, 
+      autoFocusAssist: false
+  }),
     HttpClientModule
   ],
   bootstrap: [IonicApp],
@@ -32,6 +39,7 @@ import { ChatComponent } from '../components/chat/chat';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     HttpClient,
+    PusherProvider,
   ]
 })
 export class AppModule {}

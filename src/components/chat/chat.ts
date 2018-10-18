@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { v4 } from 'uuid';
+import { PusherProvider } from '../../providers/pusher/pusher';
 
 interface Message {
     id: string;
@@ -15,23 +16,35 @@ interface Message {
 })
 
 export class ChatComponent implements OnInit {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private pusher: PusherProvider) { }
 
     messages: Array<Message> = [];
     message: string = '';
     lastMessageId;
+    showEmojis = false;
+        score = {
+        tone: '',
+        score: 0,
+    };
+
+    selectEmoji(e) {
+        const emoji = String.fromCodePoint(e);
+        this.message += ` ${emoji}`;
+        this.showEmojis = false;
+    }
 
     sendMessage() {
         if (this.message !== '') {
             // Assign an id to each outgoing message. It aids in the process of differentiating between outgoing and incoming messages
             this.lastMessageId = v4();
+            this.showEmojis = false;
             const data = {
                 id: this.lastMessageId,
                 text: this.message,
             };
 
             this.http
-                .post(`http://localhost:4000/messages`, data)
+                .post('https://bbd4b677.ngrok.io/messages', data)
                 .subscribe((res: Message) => {
                     const message = {
                         ...res,
@@ -54,5 +67,18 @@ export class ChatComponent implements OnInit {
     }
 
     ngOnInit() {
+        const channel = this.pusher.init();
+        channel.bind('message', (data) => {
+            if (data.id !== this.lastMessageId) {
+                const message: Message = {
+                ...data,
+                type: 'incoming',
+                };
+                this.showEmojis = true;
+                this.score = data.sentiment;
+                this.messages = this.messages.concat(message);
+            }
+        });
+    
     }
 }
