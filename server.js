@@ -31,19 +31,6 @@ app.use((req, res, next) => {
 app.post('/messages', (req, res) => {
     const { body } = req;
     const { text, id } = body;
-    const data = {
-        text,
-        id,
-        timeStamp: new Date(),
-    };
-
-    pusher.trigger('chat', 'message', data);
-    res.json(data);
-});
-
-app.post('/messages', (req, res) => {
-    const { body } = req;
-    const { text, id } = body;
     const result = sentiment.analyze(text);
     const comparative = result.comparative;
     const tone =

@@ -44,7 +44,7 @@ export class ChatComponent implements OnInit {
             };
 
             this.http
-                .post('https://f9117428.ngrok.io/messages', data)
+                .post('https://bbd4b677.ngrok.io/messages', data)
                 .subscribe((res: Message) => {
                     const message = {
                         ...res,
