@@ -23,7 +23,10 @@ import { EmojiPanelComponent } from '../components/emoji-panel/emoji-panel';
   ],
   imports: [
   BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      scrollAssist: false, 
+      autoFocusAssist: false
+  }),
     HttpClientModule
   ],
   bootstrap: [IonicApp],
